@@ -5,7 +5,8 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "@firebase/*": ["./app/firebase/*"]
     }
   },
   "include": [
