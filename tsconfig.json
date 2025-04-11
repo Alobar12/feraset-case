@@ -6,7 +6,13 @@
       "@/*": [
         "./*"
       ],
-      "@firebase/*": ["./app/firebase/*"]
+      "@firebase/*": [
+        "./src/app/firebase/*"
+      ],
+      "@i18n": ["./src/lib/i18n.ts"],
+      "@components": [
+        "./src/components"
+      ],
     }
   },
   "include": [
