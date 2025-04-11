@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1
   },
@@ -21,8 +21,8 @@ export const styles = StyleSheet.create({
   },
   generateButton: {
     width: '100%',
-    height: 56,
     borderRadius: 50,
+    paddingVertical: 30,
     overflow: 'hidden',
     marginBottom: 12
   },
@@ -153,3 +153,5 @@ export const styles = StyleSheet.create({
     backgroundColor: '#09090B'
   }
 });
+
+export default styles;

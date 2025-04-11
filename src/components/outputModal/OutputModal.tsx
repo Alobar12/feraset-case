@@ -4,14 +4,13 @@ import {
   Modal,
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   Image
 } from 'react-native';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@firebase/config';
-import { copy, outputImage } from '@/assets';
+import { copy, outputImage } from '@assets';
 import * as Clipboard from 'expo-clipboard';
 import { i18n } from '@i18n';
 import { styles } from './styles';

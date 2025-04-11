@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,8 @@ import {
   updateDoc,
   doc,
   onSnapshot,
-  serverTimestamp
+  serverTimestamp,
+  FieldValue
 } from 'firebase/firestore';
 import { db } from '@/src/app/firebase/config';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -27,10 +28,11 @@ import {
   monogram,
   nullImage,
   stars
-} from '@/assets';
+} from '@assets';
 import { i18n } from '@i18n';
 import { Chip, OutputModal } from '@components';
-import { styles } from '../styles/input';
+import styles from '../styles/input';
+import { DocumentReference } from 'firebase/firestore';
 
 const maxLength = 500;
 
@@ -45,6 +47,14 @@ interface InputPage {
     label: string;
   }[];
 }
+
+type Generation = {
+  prompt: string;
+  style: string;
+  status: 'processing' | 'done';
+  createdAt: FieldValue;
+  completedAt?: FieldValue;
+};
 
 type ChipComponentAttributes = {
   title: string;
@@ -86,13 +96,15 @@ export default function InputScreen() {
 
   const createGeneration = async () => {
     try {
-      const docRef = await addDoc(collection(db, 'generations'), {
-        prompt,
-        style: logoStyles,
-        status: 'processing',
-        createdAt: serverTimestamp()
-      });
-
+      const docRef: DocumentReference<Generation> = await addDoc(
+        collection(db, 'generations'),
+        {
+          prompt,
+          style: logoStyles,
+          status: 'processing',
+          createdAt: serverTimestamp()
+        }
+      );
       setDocId(docRef?.id);
       setStatus('processing');
 
@@ -120,6 +132,10 @@ export default function InputScreen() {
 
     return () => unsub();
   }, [docId]);
+
+  const handleChangeText = useCallback((text: string) => {
+    setPrompt(text);
+  }, []);
 
   const chipComponentAttributes = (): ChipComponentAttributes => {
     switch (status) {
@@ -211,7 +227,7 @@ export default function InputScreen() {
                     multiline
                     style={styles.promptInput}
                     value={prompt}
-                    onChangeText={setPrompt}
+                    onChangeText={handleChangeText}
                   />
                   <Text style={styles.promptLength}>
                     {`${prompt.length}/${maxLength}`}
@@ -277,7 +293,9 @@ export default function InputScreen() {
                   end={{ x: 0, y: 0.5 }}
                   style={[StyleSheet.absoluteFillObject, styles.buttonGradient]}
                 >
-                  <Text style={styles.generateButtonText}>Create</Text>
+                  <Text style={styles.generateButtonText}>
+                    {i18n.t('create')}
+                  </Text>
                   <Image source={stars} style={styles.buttonImage} />
                 </LinearGradient>
               </TouchableOpacity>
